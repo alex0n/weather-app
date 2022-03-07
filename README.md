@@ -67,20 +67,22 @@ Note: container building process is quite time-consuming, gprc extension install
 ### How to use app
 1. Start services with docker compose if not started
 `docker-compose up -d`
-2. Put weather station reports in `./data` OR Generate fake weather station reports: 
+2. Install packages if not installed yet
+`docker exec -ti weather-app-php composer install -o`
+3. Put weather station reports in `./data` OR Generate fake weather station reports: 
 `docker exec -ti weather-app-php php bin/console app:generate-ws-report --dt=2022-03-01`
 note: reports generator creates also invalid report with `i` prefix in filename
-3. (optional) Generate fresh grpc client for "frontend": 
+4. (optional) Generate fresh grpc client for "frontend": 
 `./src/regenerate-clients.sh`
 note: client generated in `./src/library` folder based on "proto" in `./src/protos/weather.proto` using protocol buffer language
-4. Process latest station reports: 
+5. Process latest station reports: 
 `docker exec -ti weather-app-php php bin/console app:process-ws-report`
-5. (optional) Check reports processed and moved into `./data/processed` and `./data/failed` folders
-6. Start gRPC API server:
+6. (optional) Check reports processed and moved into `./data/processed` and `./data/failed` folders
+7. Start gRPC API server:
 `docker exec -ti weather-app-php ./rr serve`
-7. In another console instance run script "emulate" frontend and get data from API:
+8. In another console instance run script "emulate" frontend and get data from API:
 `docker exec -ti weather-app-php php get-weather.php`
-8. check logs:
+9. check logs:
 `ls -la logs/`
 - `app-????-??-??.log` is an application log
 - `roadrunner.log` is grpc server log

@@ -2,7 +2,8 @@
 /**/.DS_Store
 
 docker/influxdb/data/*
-data/*
+data/**/*.csv
+data/**/*.json
 !data/processed/.gitkeep
 !data/failed/.gitkeep
 src/logs/*
