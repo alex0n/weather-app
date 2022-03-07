@@ -1,0 +1,41 @@
+// proto3 lang guide https://developers.google.com/protocol-buffers/docs/proto3
+syntax="proto3";
+package paydoo;
+
+import "google/protobuf/timestamp.proto";
+
+option php_namespace="Paydoo\\Weather";
+option php_metadata_namespace="Paydoo\\Weather\\Meta";
+
+message GetWeatherByDateAndStationRequest {
+  google.protobuf.Timestamp timestamp = 1;
+  string stationId = 2;
+}
+
+message GetWeatherByDateRequest {
+  google.protobuf.Timestamp timestamp = 1;
+}
+
+message EmptyRequest {}
+
+message WeatherInfo {
+  google.protobuf.Timestamp timestamp = 1;
+  string stationId = 2;
+  float temperature = 3;
+  float humidity = 4;
+  float wind = 5;
+}
+
+message WeatherConditionsList {
+  repeated WeatherInfo conditions = 1;
+}
+
+message LastAvailableWeatherTime {
+  google.protobuf.Timestamp timestamp = 1;
+}
+
+service Weather {
+  rpc getWeatherByStation(GetWeatherByDateAndStationRequest) returns (WeatherConditionsList);
+  rpc getWeatherAvgStatistics(GetWeatherByDateRequest) returns (WeatherConditionsList);
+  rpc getLastAvailableWeatherDt(EmptyRequest) returns (LastAvailableWeatherTime);
+}

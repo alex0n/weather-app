@@ -1,0 +1,13 @@
+
+weather.resource:
+    path: /weather
+#    path: /weather/{station}
+    defaults:
+        controller: App\Controller\Weather
+        action: resource
+    methods: [GET]
+
+#    1) Information about temperature, humidity and wind from station 1, for given date and time
+#    2) Information about temperature, humidity and wind from station 2, for given date and time
+#    3) Averaged information about temperature, humidity and wind from both stations, for given date
+#    4) Last available date/time

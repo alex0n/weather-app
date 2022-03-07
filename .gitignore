@@ -1,0 +1,12 @@
+/**/.idea/
+/**/.DS_Store
+
+docker/influxdb/data/*
+data/*
+!data/processed/.gitkeep
+!data/failed/.gitkeep
+src/logs/*
+src/vendor/*
+src/tools/**/vendor/*
+!/**/src/**/.gitkeep
+.php-cs-fixer.cache

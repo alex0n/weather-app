@@ -1,0 +1,63 @@
+imports:
+    - { resource: parameters.yaml }
+    - { resource: dependencies/production/services.yaml }
+
+services:
+
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+    _instanceof:
+        Symfony\Component\Console\Command\Command:
+            tags: ['command']
+    App\Console\Application:
+        public: true
+        arguments:
+            - !tagged command
+
+    App\Command\ProcessWeatherStationReport:
+        arguments:
+            $reportsPath: '%reports_path%'
+    App\Command\GenerateWeatherStationReport:
+        arguments:
+            $reportsPath: '%reports_path%'
+    App\Service\GRPC\Weather:
+        public: true
+    InfluxDB2\Client:
+        public: true
+        arguments:
+            $options:
+                url: '%influxdb.url%'
+                token: '%influxdb.token%'
+                bucket: '%influxdb.bucket%'
+                org: '%influxdb.org%'
+                precision: !php/const \InfluxDB2\Model\WritePrecision::S
+
+    App\WeatherApi\GrpcClient:
+        public: true
+        arguments:
+            $host: '%grpc.url%'
+    App\WeatherApi\ClientInterface: '@App\WeatherApi\GrpcClient'
+
+    App\Storage\InfluxDB\Client:
+        public: true
+
+    App\Storage\GRPC\Client: ~
+#    App\Storage\ClientFactory: ~
+    App\Storage\ClientFactory:
+        calls:
+            - [ setContainer, [ "@service_container" ] ]
+    App\Report\ProcessorResolver:
+        calls:
+            - [ setContainer, [ "@service_container" ] ]
+
+    App\Report\Specification\SpecificationFactory: ~
+    App\Report\Processor\Station1:
+        public: true
+    App\Report\Processor\Station2:
+        public: true
+    Symfony\Component\Console\Output\ConsoleOutput: ~
+    Symfony\Component\Console\Output\OutputInterface: '@Symfony\Component\Console\Output\ConsoleOutput'
+
+

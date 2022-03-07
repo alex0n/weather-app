@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  php-8.1:
+    build: ./docker/php/8.1
+    tty: true
+    container_name: weather-app-php
+    networks:
+      - web
+    volumes:
+      - ./src:/home/app:rw,delegated
+      - ./data:/home/data:rw,delegated
+  influxdb:
+    image: influxdb:2.1.1-alpine
+    container_name: weather-app-influxdb
+    tty: true
+    ports:
+      - "8086:8086"
+    environment:
+      INFLUXDB_ADMIN_ENABLED: 'true'
+      INFLUXDB_HTTP_ENABLED: 'true'
+      INFLUXDB_HTTP_LOG_ENABLED: 'false'
+      INFLUXDB_HTTP_AUTH_ENABLED: 'false'
+      INFLUXDB_REPORTING_DISABLED: 'true'
+      INFLUXDB_DATA_MAX_SERIES_PER_DATABASE: 0
+      INFLUXDB_DATA_MAX_VALUES_PER_TAG: 0
+      INFLUXDB_DATA_SERIES_ID_SET_CACHE_SIZE: 100
+      INFLUXD_CONFIG_PATH: '/etc/influxdb2'
+      INFLUXD_BOLT_PATH: '/var/lib/influxdb2/influxd.bolt'
+      INFLUXD_ENGINE_PATH: '/var/lib/influxdb2/engine'
+      DOCKER_INFLUXDB_INIT_MODE: 'setup'
+      DOCKER_INFLUXDB_INIT_USERNAME: 'root'
+      DOCKER_INFLUXDB_INIT_PASSWORD: 'rootroot'
+      DOCKER_INFLUXDB_INIT_ORG: 'paydoo'
+      DOCKER_INFLUXDB_INIT_BUCKET: 'weather'
+      DOCKER_INFLUXDB_INIT_RETENTION: '1w'
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: 'weather-app-token'
+    volumes:
+      - ./docker/influxdb/data:/var/lib/influxdb2:rw,delegated
+    networks:
+      - web
+    healthcheck:
+      test: "ln -sf /bin/busybox /bin/wget && /bin/wget -q -Y off http://localhost:8086/metrics -O /dev/null > /dev/null 2>&1"
+      interval: 25s
+      timeout: 3s
+      start_period: 30s
+networks:
+  web:
+    name: weather-app
+

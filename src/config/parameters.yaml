@@ -1,0 +1,14 @@
+parameters:
+    influxdb.url: 'weather-app-influxdb:8086'
+    influxdb.token: weather-app-token
+    influxdb.org: paydoo
+    influxdb.bucket: weather
+    grpc.url: '127.0.0.1:9001'
+    grpc.debug: true
+    reports_path: /home/data
+    logger:
+        channel: app
+        file_path: '%root_dir%/logs/app.log'
+        level: !php/const \Monolog\Logger::INFO
+        max_files: 10
+

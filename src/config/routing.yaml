@@ -1,0 +1,31 @@
+
+index:
+    path: /
+    defaults:
+        controller: App\Controller\Home
+        action: index
+    methods: [GET]
+
+weather:
+    resource: routing/weather.yaml
+
+#agents:
+#    resource: routing/agents.yaml
+#
+#agreements:
+#    resource: routing/agreements.yaml
+#
+#applications:
+#    resource: routing/applications.yaml
+#
+#customers:
+#    resource: routing/customers.yaml
+#
+#debts:
+#    resource: routing/debts.yaml
+#
+#loans:
+#    resource: routing/loans.yaml
+#
+#products:
+#    resource: routing/products.yaml
